@@ -161,3 +161,10 @@
    (org-superstar-mode 1))))
 
 (use-package! denote)
+
+(use-package! citar
+  :bind (("C-c b" . citar-insert-citation)
+         :map minibuffer-local-map
+         ("M-b" . citar-insert-preset))
+  :custom
+  (citar-bibliography '("~/bib/paperpile.bib")))
