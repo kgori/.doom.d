@@ -170,9 +170,6 @@
 (use-package! org-appear
   :hook (org-mode . org-appear-mode))
 
-
-(use-package! denote)
-
 (use-package! citar
   :bind (("C-c b" . citar-insert-citation)
          :map minibuffer-local-map
