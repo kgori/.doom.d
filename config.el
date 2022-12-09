@@ -85,6 +85,23 @@
            #'visual-line-mode)
            ; #'variable-pitch-mode)
 
+;; Org Roam capture template
+(after! (org org-roam)
+  (add-to-list 'org-roam-capture-templates
+               '("l" "latex-ready" plain "%?" :target
+                  (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+LATEX_CLASS_OPTIONS: [12pt]
+#+LATEX_HEADER: \\PassOptionsToPackage{style=nature}{biblatex}
+#+LATEX_HEADER: \\usepackage[natbib=true,backend=biber]{biblatex} \\addbibresource{~/bib/paperpile.bib}
+#+LATEX_HEADER: \\hypersetup{colorlinks,linkcolor=red,citecolor=blue,urlcolor=blue}
+#+LATEX_HEADER: \\usepackage{parskip}
+#+LATEX_HEADER: \\usepackage{charter} \\renewcommand\\familydefault{bch}
+#+LATEX_HEADER: \\usepackage[margin=1.2in]{geometry}
+#+title: ${title}
+#+filetags: %^g
+")
+                :unnarrowed t)
+))
+
 ;; Set calendar start of the week to Monday
 (setq calendar-week-start-day 1)
 
