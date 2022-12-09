@@ -170,12 +170,6 @@
 (use-package! org-appear
   :hook (org-mode . org-appear-mode))
 
-;; Nice bullets
-(use-package! org-superstar
-  :config
-  (setq org-superstar-special-todo-items t)
-  (add-hook 'org-mode-hook (lambda ()
-   (org-superstar-mode 1))))
 
 (use-package! denote)
 
