@@ -176,3 +176,12 @@
          ("M-b" . citar-insert-preset))
   :custom
   (citar-bibliography '("~/bib/paperpile.bib")))
+
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (("C-\\" . 'copilot-accept-completion-by-word)
+         ("C-;" . 'copilot-accept-completion-by-line)
+         ("M-;" . 'copilot-accept-completion)
+         ("M-]" . 'copilot-next-completion)
+         ("M-[" . 'copilot-previous-completion)
+         :map copilot-completion-map))
