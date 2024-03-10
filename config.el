@@ -38,7 +38,7 @@
 
 ; (setq doom-font (font-spec :family "FiraCode Nerd Font" :size 12)
 ;       doom-variable-pitch-font (font-spec :family "Sofia Pro" :height 1.2))
-(setq doom-font (font-spec :family "CaskaydiaCove Nerd Font" :size 13.0 :weight 'Regular)
+(setq doom-font (font-spec :family "Hurmit Nerd Font" :size 14.0 :weight 'Regular)
       doom-variable-pitch-font (font-spec :family "Fira Sans"))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
@@ -185,3 +185,66 @@
          ("M-]" . 'copilot-next-completion)
          ("M-[" . 'copilot-previous-completion)
          :map copilot-completion-map))
+
+(defun my-enable-evil-move-beyond-eol ()
+  (setq-local evil-move-beyond-eol t))
+
+(defun my-disable-evil-move-beyond-eol ()
+  (setq-local evil-move-beyond-eol nil))
+
+(use-package! smartparens
+  :init
+  (map! :map smartparens-mode-map
+        "C-M-f" #'sp-forward-sexp
+        "C-M-b" #'sp-backward-sexp
+        "C-M-u" #'sp-backward-up-sexp
+        "C-M-d" #'sp-down-sexp
+        "C-M-a" #'sp-backward-down-sexp
+        "C-M-e" #'sp-up-sexp
+        "C-M-s" #'sp-splice-sexp
+        "M-(" #'sp-wrap-round
+        "M-[" #'sp-wrap-square
+        "M-{" #'sp-wrap-curly
+        "<M-delete>" #'sp-unwrap-sexp
+        "<M-backspace>" #'sp-backward-unwrap-sexp
+        "s-<right>" #'sp-forward-slurp-sexp
+        "s-<left>" #'sp-forward-barf-sexp
+        "M-<left>" #'sp-backward-slurp-sexp
+        "M-<right>" #'sp-backward-barf-sexp)
+  :config
+  (add-hook 'smartparens-enabled-hook #'my-enable-evil-move-beyond-eol)
+  (add-hook 'smartparens-disabled-hook #'my-disable-evil-move-beyond-eol))
+
+(setq sly-lisp-implementations
+      '((sbcl ("sbcl" "--dynamic-space-size 4096"))))
+
+(with-eval-after-load "lsp-rust"
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection (lsp-stdio-connection
+                     (lambda ()
+                       `(,(or (executable-find
+                               (cl-first lsp-rust-analyzer-server-command))
+                              (lsp-package-path 'rust-analyzer)
+                              "rust-analyzer")
+                         ,@(cl-rest lsp-rust-analyzer-server-args))))
+    :remote? t
+    :major-modes '(rust-mode rustic-mode)
+    :initialization-options 'lsp-rust-analyzer--make-init-options
+    :notification-handlers (ht<-alist lsp-rust-notification-handlers)
+    :action-handlers (ht ("rust-analyzer.runSingle" #'lsp-rust--analyzer-run-single))
+    :library-folders-fn (lambda (_workspace) lsp-rust-library-directories)
+    :after-open-fn (lambda ()
+                     (when lsp-rust-analyzer-server-display-inlay-hints
+                       (lsp-rust-analyzer-inlay-hints-mode)))
+    :ignore-messages nil
+    :server-id 'rust-analyzer-remote)))
+
+(defun start-file-process-shell-command@around (start-file-process-shell-command name buffer &rest args)
+  "Start a program in a subprocess.  Return the process object for it. Similar to `start-process-shell-command', but calls `start-file-process'."
+  ;; On remote hosts, the local `shell-file-name' might be useless.
+  (let ((command (mapconcat 'identity args " ")))
+    (funcall start-file-process-shell-command name buffer command)))
+
+(advice-add 'start-file-process-shell-command :around #'start-file-process-shell-command@around)
+

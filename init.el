@@ -68,7 +68,7 @@
        ;;word-wrap         ; soft wrapping with language-aware indent
 
        :emacs
-       dired             ; making dired pretty [functional]
+       (dired +icons)    ; making dired pretty [functional]
        electric          ; smarter, keyword-based electric-indent
        ;;ibuffer         ; interactive buffer management
        undo              ; persistent, smarter undo for your inevitable mistakes
@@ -145,7 +145,7 @@
        ;;idris             ; a language you can depend on
        ;;json              ; At least it ain't XML
        ;;(java +lsp)       ; the poster child for carpal tunnel syndrome
-       ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
+       javascript        ; all(hope(abandon(ye(who(enter(here))))))
        julia             ; a better, faster MATLAB
        ;;kotlin            ; a better, slicker Java(Script)
        (latex             ; writing papers in Emacs has never been so fun
@@ -169,8 +169,8 @@
        ;;purescript        ; javascript, but functional
        (python            ; beautiful is better than ugly
          +lsp
-         +conda
-         +poetry)
+         +pyright
+         +conda)
        ;;qt                ; the 'cutest' gui framework ever
        (racket
          +lsp)             ; a DSL for DSLs
